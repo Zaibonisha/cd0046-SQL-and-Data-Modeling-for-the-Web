@@ -7,7 +7,16 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 
 # Connect to the database
+import psycopg2
+
+conn = psycopg2.connect('host=127.0.0.1 dbname=fyyur user=postgres port=3000')
+
+
+cur = conn.cursor()
+
+
+
 
 
 # TODO IMPLEMENT DATABASE URL
-SQLALCHEMY_DATABASE_URI = '<Put your local database url>'
+SQLALCHEMY_DATABASE_URI = 'postgresql://postgres@127.0.0.1:3000/fyyur'
