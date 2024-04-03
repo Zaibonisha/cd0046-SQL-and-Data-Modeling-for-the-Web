@@ -9,7 +9,7 @@ DEBUG = True
 # Connect to the database
 import psycopg2
 
-conn = psycopg2.connect('host=127.0.0.1 dbname=fyyur user=postgres port=3000')
+conn = psycopg2.connect('host=127.0.0.1 dbname=fyyur user=postgres port=5432 password=090194')
 
 
 cur = conn.cursor()

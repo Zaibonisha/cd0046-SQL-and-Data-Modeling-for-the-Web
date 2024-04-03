@@ -1,16 +1,19 @@
 #----------------------------------------------------------------------------#
 # Imports
 #----------------------------------------------------------------------------#
+
 import psycopg2
 
+# Establish connection to the database
 conn = psycopg2.connect(
     host="127.0.0.1",
     dbname="fyyur",
     user="postgres",
     password="090194",
-    port=5432
+    port="5432"
 )
 
+# Create a cursor object to execute SQL queries
 cur = conn.cursor()
 
 # Create Venue table
@@ -25,12 +28,32 @@ cur.execute("""
 """)
 
 # Insert data into Venue table
-venue_data = [
-    (1, "The Musical Hop", "San Francisco", "CA", 0),
-    (2, "The Dueling Pianos Bar", "New York", "NY", 0),
-    (3, "Park Square Live Music & Coffee", "San Francisco", "CA", 1)
+venues_data = [
+    {
+        "name": "The Musical Hop",
+        "city": "San Francisco",
+        "state": "CA",
+        "num_upcoming_shows": 0,
+    },
+    {
+        "name": "Park Square Live Music & Coffee",
+        "city": "San Francisco",
+        "state": "CA",
+        "num_upcoming_shows": 1,
+    },
+    {
+        "name": "The Dueling Pianos Bar",
+        "city": "New York",
+        "state": "NY",
+        "num_upcoming_shows": 0,
+    }
 ]
-cur.executemany('INSERT INTO Venue (id, name, city, state, num_upcoming_shows) VALUES (%s, %s, %s, %s, %s);', venue_data)
+
+for venue in venues_data:
+    cur.execute("""
+        INSERT INTO Venue (name, city, state, num_upcoming_shows)
+        VALUES (%s, %s, %s, %s)
+    """, (venue["name"], venue["city"], venue["state"], venue["num_upcoming_shows"]))
 
 # Create Artist table
 cur.execute("""
@@ -41,18 +64,26 @@ cur.execute("""
 """)
 
 # Insert data into Artist table
-artist_data = [
-    (4, "Guns N Petals"),
-    (5, "Matt Quevedo"),
-    (6, "The Wild Sax Band")
+artists_data = [
+    {"name": "Guns N Petals"},
+    {"name": "Matt Quevedo"},
+    {"name": "The Wild Sax Band"}
 ]
-cur.executemany('INSERT INTO Artist (id, name) VALUES (%s, %s);', artist_data)
+
+for artist in artists_data:
+    cur.execute("""
+        INSERT INTO Artist (name)
+        VALUES (%s)
+    """, (artist["name"],))
 
 # Commit the transaction
 conn.commit()
 
+# Close the cursor and connection
 cur.close()
 conn.close()
+
+
 
 import json
 import dateutil.parser
@@ -84,7 +115,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres@127.0.0.1:3000/fyyur'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:090194@127.0.0.1:5432/fyyur'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 db.init_app(app)
