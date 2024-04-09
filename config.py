@@ -24,4 +24,4 @@ cur = conn.cursor()
 
 
 # TODO IMPLEMENT DATABASE URL
-SQLALCHEMY_DATABASE_URI = 'postgresql://postgres@127.0.0.1:3000/fyyur'
+SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:090194@127.0.0.1:5432/fyyur'
